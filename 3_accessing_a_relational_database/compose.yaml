@@ -4,8 +4,6 @@ services:
     container_name: go_tutorial_3_mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: root_user
-      MYSQL_PASSWORD: root_password
     ports:
       - "3306:3306"
     volumes:
