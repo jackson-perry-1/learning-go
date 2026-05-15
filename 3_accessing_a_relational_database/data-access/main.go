@@ -11,6 +11,13 @@ import (
 
 var db *sql.DB
 
+type Album struct {
+	ID     int64
+	Title  string
+	Artist string
+	Price  float32
+}
+
 func main() {
 	// Capture connection properties.
 	cfg := mysql.NewConfig()
@@ -32,4 +39,28 @@ func main() {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
+}
+
+func albumsByArtist(artist string) ([]Album, error) {
+	var albums []Album
+
+	rows, err := db.Query("SELECT * FROM album WHERE artist = ?", artist)
+
+	if err != nil {
+		return nil, fmt.Errorf("albumsByArtist %q: %v", artist, err)
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var album Album
+		if err := rows.Scan(&album.ID, &album.Title, &album.Artist, &album.Price); err != nil {
+			return nil, fmt.Errorf("albumsByArtist %q: %v", artist, err)
+		}
+		albums = append(albums, alb)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("albumsByArtist %q: %v", artist, err)
+	}
+	return albums, nil
 }
