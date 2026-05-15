@@ -39,6 +39,12 @@ func main() {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
+
+	albums, err := albumsByArtist("John Coltrane")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Albums found: %v\n", albums)
 }
 
 func albumsByArtist(artist string) ([]Album, error) {
@@ -53,8 +59,8 @@ func albumsByArtist(artist string) ([]Album, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var album Album
-		if err := rows.Scan(&album.ID, &album.Title, &album.Artist, &album.Price); err != nil {
+		var alb Album
+		if err := rows.Scan(&alb.ID, &alb.Title, &alb.Artist, &alb.Price); err != nil {
 			return nil, fmt.Errorf("albumsByArtist %q: %v", artist, err)
 		}
 		albums = append(albums, alb)
